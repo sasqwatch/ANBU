@@ -6,6 +6,7 @@
 
 FILE*				logfile; // log file handler
 pe_file*			pe_file_entropy;
+uint64_t			tick_counts_per_millisecond = 0; // more or less ticks per millisecond
  /*
  *   KNOB class to create arguments with PIN
  *   on this case, we will create an argument
@@ -50,6 +51,8 @@ EXCEPT_HANDLING_RESULT ExceptionHandler(THREADID tid, EXCEPTION_INFO *pExceptInf
 
 int main(int argc, char *argv[])
 {
+	WINDOWS::DWORD tick_count1, tick_count2;
+
 	fprintf(stderr, "+--<<< ANBU by F9 >>>>--+\n");
 	/*
 	*	As we will use symbols...
@@ -113,6 +116,15 @@ int main(int argc, char *argv[])
 	*	Add instrumentation for IMG loading.
 	*/
 	IMG_AddInstrumentFunction(get_addresses_from_images, NULL);
+
+	/*
+	*	Add instrumentation for anti-anti-stuff.
+	*/
+	tick_count1 = WINDOWS::GetTickCount();
+	WINDOWS::Sleep(1);
+	tick_count2 = WINDOWS::GetTickCount();
+	tick_counts_per_millisecond = tick_count2 - tick_count1;
+	IMG_AddInstrumentFunction(hook_functions, NULL);
 
 	/*
 	*   RUN the program and never return

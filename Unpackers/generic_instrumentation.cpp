@@ -25,6 +25,7 @@ void get_addresses_from_images(IMG img, VOID *v)
 	RTN getmodulehandleW;
 	RTN getprocaddress;
 
+
 	fprintf(stderr, "[INFO] IMG Loaded: %s\n", IMG_Name(img).c_str());
 	fprintf(logfile, "[INFO] IMG Loaded: %s\n", IMG_Name(img).c_str());
 
@@ -162,8 +163,6 @@ void get_addresses_from_images(IMG img, VOID *v)
 
 		RTN_Close(getprocaddress);
 	}
-
-	
 
 	return;
 }

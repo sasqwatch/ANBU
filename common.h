@@ -21,7 +21,6 @@ namespace WINDOWS {
 #include <vector>
 #include <map>
 
-
 typedef struct _write_memory
 {
 	ADDRINT address;

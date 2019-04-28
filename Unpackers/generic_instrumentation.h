@@ -6,6 +6,7 @@
 #include "common.h"
 #include "importer.h"
 #include "pe_file.h"
+#include "anti-methods.h"
 
 /****** Structures used for monitoring functions ******/
 typedef struct function_struct_t_

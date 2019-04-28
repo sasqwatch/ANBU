@@ -176,7 +176,7 @@
       <AdditionalOptions>/GR- /GS- /EHs- /EHa- /FP:strict /Oi- /FIinclude/msvc_compat.h %(AdditionalOptions)</AdditionalOptions>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\include\pin;..\..\include\pin\gen;..\InstLib;..\..\..\extras\xed-ia32\include\xed;..\..\..\extras\components\include;..\..\..\extras\stlport\include;..\..\..\extras;..\..\..\extras\libstdc++\include;..\..\..\extras\crt\include;..\..\..\extras\crt;..\..\..\extras\crt\include\arch-x86;..\..\..\extras\crt\include\kernel\uapi;..\..\..\extras\crt\include\kernel\uapi\asm-x86;.;.\PE;.\Unpackers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include\pin;..\..\include\pin\gen;..\InstLib;..\..\..\extras\xed-ia32\include\xed;..\..\..\extras\components\include;..\..\..\extras\stlport\include;..\..\..\extras;..\..\..\extras\libstdc++\include;..\..\..\extras\crt\include;..\..\..\extras\crt;..\..\..\extras\crt\include\arch-x86;..\..\..\extras\crt\include\kernel\uapi;..\..\..\extras\crt\include\kernel\uapi\asm-x86;.;.\PE;.\Unpackers;.\anti-methods;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>TARGET_IA32;HOST_IA32;TARGET_WINDOWS;WIN32;__PIN__=1;PIN_CRT=1;__i386__;_WINDOWS_H_PATH_</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <ExceptionHandling>
@@ -257,6 +257,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="anti-methods\anti-methods.cpp" />
     <ClCompile Include="importer.cpp" />
     <ClCompile Include="PE\data_directory_header.cpp" />
     <ClCompile Include="PE\dos_header.cpp" />
@@ -277,6 +278,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="anti-methods\anti-methods.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="importer.h" />
     <ClInclude Include="PE\data_directory_header.h" />

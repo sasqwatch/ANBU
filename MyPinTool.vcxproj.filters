@@ -37,6 +37,12 @@
     <Filter Include="Source Files\PE\fixer">
       <UniqueIdentifier>{92b119b2-ea87-41b3-8d9b-689b3e3c0e28}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\anti-anti">
+      <UniqueIdentifier>{6478e994-26a8-42c8-b255-dce0d43c88b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\anti-anti">
+      <UniqueIdentifier>{bbc166f3-9fb0-4ce8-8be5-3a59533d15e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README">
@@ -48,6 +54,7 @@
     <None Include="makefile.rules">
       <Filter>Documents</Filter>
     </None>
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="unpacker.h">
@@ -89,6 +96,9 @@
     <ClInclude Include="PE\pe_file.h">
       <Filter>Header Files\PE</Filter>
     </ClInclude>
+    <ClInclude Include="anti-methods\anti-methods.h">
+      <Filter>Header Files\anti-anti</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="unpacker.cpp">
@@ -126,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="PE\pe_file.cpp">
       <Filter>Source Files\PE</Filter>
+    </ClCompile>
+    <ClCompile Include="anti-methods\anti-methods.cpp">
+      <Filter>Source Files\anti-anti</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
