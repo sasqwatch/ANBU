@@ -197,36 +197,37 @@ void hook_getmodulehandlew_before(const wchar_t* dll_name)
 
 void hook_loadlibrary_after(ADDRINT dll_address)
 {
-	if (aux)
+	if (dll_address != NULL)
 	{
-		if (dll_address != NULL)
+		if (saved_dll_nameA != nullptr)
 		{
-			if (saved_dll_nameA != nullptr)
+			if (aux == nullptr					// if aux is equals to nullptr
+				|| strcmp(aux->dll_nameA.c_str(), saved_dll_nameA) != 0)
 			{
-				if (aux == nullptr					// if aux is equals to nullptr
-					|| strcmp(aux->dll_nameA.c_str(), saved_dll_nameA) != 0)
-				{
-					aux = new dll_import_struct_t();
-					aux->dll_nameA = saved_dll_nameA;
-					dll_imports.push_back(aux);
+				aux = new dll_import_struct_t();
+				aux->dll_nameA = saved_dll_nameA;
+				dll_imports.push_back(aux);
 
-					fprintf(stderr, "[INFO] LoadLibraryA dll name: %s\n", saved_dll_nameA);
-					fprintf(logfile, "[INFO] LoadLibraryA dll name: %s\n", saved_dll_nameA);
-				}
+				fprintf(stderr, "[INFO] LoadLibraryA dll name: %s\n", saved_dll_nameA);
+				fprintf(logfile, "[INFO] LoadLibraryA dll name: %s\n", saved_dll_nameA);
 			}
-			else if (saved_dll_nameW != nullptr)
+		}
+		else if (saved_dll_nameW != nullptr)
+		{
+			if (aux == nullptr
+				|| wcscmp(aux->dll_nameW.c_str(), saved_dll_nameW) != 0)
 			{
-				if (aux == nullptr
-					|| wcscmp(aux->dll_nameW.c_str(), saved_dll_nameW) != 0)
-				{
-					aux = new dll_import_struct_t();
-					aux->dll_nameW = saved_dll_nameW;
-					dll_imports.push_back(aux);
+				aux = new dll_import_struct_t();
+				aux->dll_nameW = saved_dll_nameW;
+				dll_imports.push_back(aux);
 
-					fwprintf(stderr, L"[INFO] LoadLibraryW dll name: %S\n", saved_dll_nameW);
-					fwprintf(logfile, L"[INFO] LoadLibraryW dll name: %S\n", saved_dll_nameW);
-				}
+				fwprintf(stderr, L"[INFO] LoadLibraryW dll name: %S\n", saved_dll_nameW);
+				fwprintf(logfile, L"[INFO] LoadLibraryW dll name: %S\n", saved_dll_nameW);
 			}
+		}
+		
+		if (aux)
+		{
 			saved_dll_nameA = nullptr;
 			saved_dll_nameW = nullptr;
 

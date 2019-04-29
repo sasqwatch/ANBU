@@ -46,7 +46,7 @@ EXCEPT_HANDLING_RESULT ExceptionHandler(THREADID tid, EXCEPTION_INFO *pExceptInf
 	fprintf(stderr,"Exception string: %s\n", PIN_ExceptionToString(pExceptInfo).c_str());
 	fprintf(logfile, "Exception string: %s\n", PIN_ExceptionToString(pExceptInfo).c_str());
 
-	return EHR_UNHANDLED;
+	return EHR_CONTINUE_SEARCH;
 }
 
 int main(int argc, char *argv[])

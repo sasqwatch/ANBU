@@ -11,6 +11,7 @@
 /****** Structures used for monitoring functions ******/
 typedef struct function_struct_t_
 {
+	function_struct_t_() : is_ordinal(false), function_ordinal(0), function_address(0), function_destination(0) {}
 	bool		is_ordinal;
 	uint16_t	function_ordinal;
 	std::string function_name;
@@ -20,6 +21,7 @@ typedef struct function_struct_t_
 
 typedef struct dll_import_struct_t_
 {
+	dll_import_struct_t_() : dll_address(0) {}
 	std::string						dll_nameA;
 	std::wstring					dll_nameW;
 	ADDRINT							dll_address;
