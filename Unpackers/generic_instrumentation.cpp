@@ -197,41 +197,44 @@ void hook_getmodulehandlew_before(const wchar_t* dll_name)
 
 void hook_loadlibrary_after(ADDRINT dll_address)
 {
-	if (dll_address != NULL)
+	if (aux)
 	{
-		if (saved_dll_nameA != nullptr)
+		if (dll_address != NULL)
 		{
-			if (aux == nullptr					// if aux is equals to nullptr
-				|| strcmp(aux->dll_nameA.c_str(), saved_dll_nameA) != 0)
+			if (saved_dll_nameA != nullptr)
 			{
-				aux = new dll_import_struct_t();
-				aux->dll_nameA = saved_dll_nameA;
-				dll_imports.push_back(aux);
+				if (aux == nullptr					// if aux is equals to nullptr
+					|| strcmp(aux->dll_nameA.c_str(), saved_dll_nameA) != 0)
+				{
+					aux = new dll_import_struct_t();
+					aux->dll_nameA = saved_dll_nameA;
+					dll_imports.push_back(aux);
 
-				fprintf(stderr, "[INFO] LoadLibraryA dll name: %s\n", saved_dll_nameA);
-				fprintf(logfile, "[INFO] LoadLibraryA dll name: %s\n", saved_dll_nameA);
+					fprintf(stderr, "[INFO] LoadLibraryA dll name: %s\n", saved_dll_nameA);
+					fprintf(logfile, "[INFO] LoadLibraryA dll name: %s\n", saved_dll_nameA);
+				}
 			}
-		}
-		else if (saved_dll_nameW != nullptr)
-		{
-			if (aux == nullptr
-				|| wcscmp(aux->dll_nameW.c_str(), saved_dll_nameW) != 0)
+			else if (saved_dll_nameW != nullptr)
 			{
-				aux = new dll_import_struct_t();
-				aux->dll_nameW = saved_dll_nameW;
-				dll_imports.push_back(aux);
+				if (aux == nullptr
+					|| wcscmp(aux->dll_nameW.c_str(), saved_dll_nameW) != 0)
+				{
+					aux = new dll_import_struct_t();
+					aux->dll_nameW = saved_dll_nameW;
+					dll_imports.push_back(aux);
 
-				fwprintf(stderr, L"[INFO] LoadLibraryW dll name: %S\n", saved_dll_nameW);
-				fwprintf(logfile, L"[INFO] LoadLibraryW dll name: %S\n", saved_dll_nameW);
+					fwprintf(stderr, L"[INFO] LoadLibraryW dll name: %S\n", saved_dll_nameW);
+					fwprintf(logfile, L"[INFO] LoadLibraryW dll name: %S\n", saved_dll_nameW);
+				}
 			}
+			saved_dll_nameA = nullptr;
+			saved_dll_nameW = nullptr;
+
+			aux->dll_address = dll_address;
+
+			fprintf(stderr, "[INFO] LoadLibrary returned: 0x%x\n", dll_address);
+			fprintf(logfile, "[INFO] LoadLibrary returned: 0x%x\n", dll_address);
 		}
-		saved_dll_nameA = nullptr;
-		saved_dll_nameW = nullptr;
-
-		aux->dll_address = dll_address;
-
-		fprintf(stderr, "[INFO] LoadLibrary returned: 0x%x\n", dll_address);
-		fprintf(logfile, "[INFO] LoadLibrary returned: 0x%x\n", dll_address);
 	}
 }
 

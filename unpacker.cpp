@@ -125,6 +125,7 @@ int main(int argc, char *argv[])
 	tick_count2 = WINDOWS::GetTickCount();
 	tick_counts_per_millisecond = tick_count2 - tick_count1;
 	IMG_AddInstrumentFunction(hook_functions, NULL);
+	INS_AddInstrumentFunction(hook_instructions, NULL);
 
 	/*
 	*   RUN the program and never return

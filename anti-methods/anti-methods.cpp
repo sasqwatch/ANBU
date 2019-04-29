@@ -53,6 +53,21 @@ void hook_functions(IMG img, VOID *v)
 	}
 }
 
+void hook_instructions(INS ins, void *v)
+{
+	if (INS_IsRDTSC(ins))
+	{
+		INS_InsertPredicatedCall(
+			ins,
+			IPOINT_AFTER,
+			AFUNPTR(MyRDTSC),
+			IARG_REG_REFERENCE, REG_GAX,
+			IARG_REG_REFERENCE, REG_GDX,
+			IARG_END
+		);
+	}
+}
+
 WINDOWS::BOOL WINAPI MyOwnIsDebuggerPresent()
 {
 	return FALSE;
@@ -98,4 +113,16 @@ void MySleep(WINDOWS::DWORD dwMilliseconds)
 	fprintf(stderr, "[INFO] Sleep Avoided\n");
 	fprintf(logfile, "[INFO] Sleep Avoided\n");
 	return;
+}
+
+
+/*
+*	Fixed function following: https://reverseengineering.stackexchange.com/questions/17830/intel-pin-tracerpin-adding-modification-of-registers
+*/
+void MyRDTSC(ADDRINT *gax, ADDRINT *gdx)
+{
+	ADDRINT new_value = MyGetTickCount();
+
+	*gax = new_value;
+	*gdx = (ADDRINT)0;
 }
