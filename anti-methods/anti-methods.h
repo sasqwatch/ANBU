@@ -5,12 +5,17 @@
 
 #include "common.h"
 
-void hook_functions(IMG img, VOID *v);
-void hook_instructions(INS ins, void *v);
+/******************************
+*	INSTRUMENTATION CODE
+*******************************/
+void									hook_functions(IMG img, VOID *v);
+void									hook_instructions(INS ins, void *v);
 
 
-
-WINDOWS::BOOL			WINAPI			MyOwnIsDebuggerPresent();
+/******************************
+*	HOOKS
+*******************************/
+WINDOWS::BOOL			WINAPI			MyIsDebuggerPresent();
 void									MySleep(WINDOWS::DWORD dwMilliseconds);
 WINDOWS::DWORD			WINAPI			MyGetTickCount();
 WINDOWS::ULONGLONG		WINAPI			MyGetTickCount64();

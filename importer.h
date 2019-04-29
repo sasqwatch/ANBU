@@ -48,6 +48,7 @@ public:
 		uint32_t firstThunk;
 	};
 #pragma pack()
+
 	static const uint64_t ordinal_constant_64_binary = 0x8000000000000000;
 	static const uint32_t ordinal_constant_32_binary = 0x80000000;
 
@@ -65,9 +66,9 @@ public:
 	void ImporterAddNewAPIOrdinal(uint16_t function_ordinal);
 	void ImporterSetNewFirstThunk(uint32_t first_thunk);
 
-	std::vector<uint8_t> ImporterDumpToFile(uint32_t& rva_of_import_directory);
+	std::vector<uint8_t>	ImporterDumpToFile(uint32_t& rva_of_import_directory);
 	std::vector<uintptr_t>  get_original_first_thunk();
-	uint32_t get_rva_first_thunk();
+	uint32_t				get_rva_first_thunk();
 
 private:
 	void copy_name_to_buffer(std::vector<uint8_t>& buffer, std::string name);

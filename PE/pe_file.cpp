@@ -277,7 +277,6 @@ bool pe_file::parse_pe_header()
 		return headers_are_correct;
 	}
 
-
 	this->number_of_sections = this->nt_coff_header->get_nt_header().numberOfSections;
 
 	headers_are_correct = true;

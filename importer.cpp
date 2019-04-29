@@ -106,17 +106,18 @@ std::vector<uint8_t> Importer::ImporterDumpToFile(uint32_t& rva_of_import_direct
 	// sorted
 	std::sort(dlls_and_functions.begin(), dlls_and_functions.end());
 
-	uint32_t new_section_virtual_address = 0;
-	uint32_t last_section_virtual_size_aligned = 0;
-	uint32_t section_alignment;
-	uint64_t size_for_original_first_thunk_and_import_directories = 0; // total size of original first thunk and import directories
+	uint32_t new_section_virtual_address							= 0;
+	uint32_t last_section_virtual_size_aligned						= 0;
+	uint32_t section_alignment										= 0;
+	uint64_t size_for_original_first_thunk_and_import_directories	= 0; // total size of original first thunk and import directories
+
 	if (optional_header->is_64_bit_binary())
 		section_alignment = optional_header->get_optional_image().optional_64.sectionAlignment;
 	else
 		section_alignment = optional_header->get_optional_image().optional_32.sectionAlignment;
 
-	auto sections = section_table_header->get_sections();
-	auto last_section = sections.at(sections.size() - 1);
+	auto sections		= section_table_header->get_sections();
+	auto last_section	= sections.at(sections.size() - 1);
 
 	// get new base address
 	last_section_virtual_size_aligned = last_section.virtualSize;
@@ -194,14 +195,15 @@ std::vector<uint8_t> Importer::ImporterDumpToFile(uint32_t& rva_of_import_direct
 				*/
 				uintptr_t offset_of_name = (uintptr_t)(
 					std::search(
-					(const char*)raw_strings_dlls_and_functions.begin(),
+						(const char*)raw_strings_dlls_and_functions.begin(),
 						(const char*)(raw_strings_dlls_and_functions.begin() + raw_strings_dlls_and_functions.size()),
 						name.c_str(),
 						name.c_str() + name.size() + 1
 					));
 				offset_of_name = offset_of_name - (uintptr_t)raw_strings_dlls_and_functions.begin();
 				
-				new_original_first_thunk.push_back(new_section_virtual_address + // take base
+				new_original_first_thunk.push_back(
+					new_section_virtual_address + // take base
 					(uintptr_t)size_for_original_first_thunk_and_import_directories + // plus size of original first thunk and import directories
 					offset_of_name - // plus offset of the name inside of the vector
 					2 // - 2 to point to the hint
@@ -217,8 +219,8 @@ std::vector<uint8_t> Importer::ImporterDumpToFile(uint32_t& rva_of_import_direct
 	/*
 	*	Now set a vector for the import directories
 	*/
-	import_directory_struct_t import_directory_aux = { 0 };
-	uint32_t original_first_thunk = new_section_virtual_address; // the first original first thunk, will be the base of the new section in memory
+	import_directory_struct_t import_directory_aux	= { 0 };
+	uint32_t original_first_thunk					= new_section_virtual_address; // the first original first thunk, will be the base of the new section in memory
 	for (size_t dll_names = 0; dll_names < dlls_and_functions.size(); dll_names++)
 	{
 		// search now offset of the dll name in the buffer with the strings
@@ -248,9 +250,9 @@ std::vector<uint8_t> Importer::ImporterDumpToFile(uint32_t& rva_of_import_direct
 	imports_directories.push_back(import_directory_aux);
 
 	// finally the last vector will be the union of the others
-	size_t size = raw_strings_dlls_and_functions.size() +
-		new_original_first_thunk.size() * sizeof(uintptr_t) +
-		imports_directories.size() * sizeof(import_directory_struct_t);
+	size_t size =	raw_strings_dlls_and_functions.size() +
+					new_original_first_thunk.size() * sizeof(uintptr_t) +
+					imports_directories.size() * sizeof(import_directory_struct_t);
 	
 	buffer.resize(size);
 	uint8_t *p_buffer = buffer.begin();

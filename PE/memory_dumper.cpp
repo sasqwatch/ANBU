@@ -6,12 +6,12 @@
 extern FILE* logfile;
 
 memory_dumper_t::memory_dumper_t(ADDRINT jump_target) : dos_header(nullptr),
-																 nt_coff_header(nullptr),
-																 data_directory_header(nullptr),
-																 section_table_header(nullptr),
-																 dos_stub(nullptr),
-																 dump_correct(false),
-																 headers_correct(false)
+														nt_coff_header(nullptr),
+														data_directory_header(nullptr),
+														section_table_header(nullptr),
+														dos_stub(nullptr),
+														dump_correct(false),
+														headers_correct(false)
 /***
 *	Constructor for unpacker when file has been dumped
 *	from the same memory and then there's an indirect
@@ -45,13 +45,13 @@ memory_dumper_t::memory_dumper_t(ADDRINT jump_target) : dos_header(nullptr),
 }
 
 memory_dumper_t::memory_dumper_t(std::vector<uint8_t> file_base_in_vector) : dos_header(nullptr),
-																					nt_coff_header(nullptr),
-																					data_directory_header(nullptr),
-																					section_table_header(nullptr),
-																					dos_stub(nullptr),
-																					dump_correct(false),
-																					headers_correct(false),
-																					mem_dumper_correct(true)
+																			 nt_coff_header(nullptr),
+																			 data_directory_header(nullptr),
+																			 section_table_header(nullptr),
+																			 dos_stub(nullptr),
+																			 dump_correct(false),
+																			 headers_correct(false),
+																			 mem_dumper_correct(true)
 /***
 *	Constructor for the unpacker when unpacks a RunPE
 *	we have the file in vectors of bytes, as it will 
@@ -197,8 +197,7 @@ bool memory_dumper_t::dump_pe_to_file()
 	if (!mem_dumper_correct || !headers_correct)
 		return false;
 
-	snprintf(file_name, sizeof(file_name) - 1, "file.base-0x%x.entry-0x%x.bin", (uintptr_t)base_address_to_dump
-, (uintptr_t)address_code_to_dump);
+	snprintf(file_name, sizeof(file_name) - 1, "file.base-0x%x.entry-0x%x.bin", (uintptr_t)base_address_to_dump, (uintptr_t)address_code_to_dump);
 
 	dumped_file = fopen(file_name, "wb");
 
@@ -224,7 +223,9 @@ bool memory_dumper_t::dump_pe_to_file()
 	if (!write_sections_to_file())
 		return false;
 
-	std::vector<uint8_t> import_section = importer->ImporterDumpToFile(data_directory_header->get_data_directories().at(data_directory_header->import_table_k).virtualAddress);
+	std::vector<uint8_t> import_section = importer->ImporterDumpToFile(
+		data_directory_header->get_data_directories().at(data_directory_header->import_table_k).virtualAddress
+	);
 
 	// if import section is empty, maybe is not bad
 	// return true
@@ -243,9 +244,8 @@ bool memory_dumper_t::dump_pe_to_file()
 	section->characteristics |= section_table_header->IMAGE_SCN_MEM_READ_k;
 
 	fseek(dumped_file,
-		section_table_header->get_sections().at(
-			section_table_header->get_sections().size() - 1).pointerToRawData,
-		SEEK_SET
+		  section_table_header->get_sections().at(section_table_header->get_sections().size() - 1).pointerToRawData,
+		  SEEK_SET
 	);
 
 	size_t written_bytes = fwrite(import_section.begin(), import_section.size(), 1, dumped_file);

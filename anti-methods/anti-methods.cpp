@@ -9,6 +9,9 @@ static uint32_t						rdtsc = 0;
 static WINDOWS::SYSTEMTIME			local_time = { 0 };
 static WINDOWS::SYSTEMTIME			system_time = { 0 };
 
+/******************************
+*	INSTRUMENTATION CODE
+*******************************/
 
 void hook_functions(IMG img, VOID *v)
 {
@@ -18,16 +21,14 @@ void hook_functions(IMG img, VOID *v)
 	RTN gettickcount64;
 
 	isdebuggerpresent = RTN_FindByName(img, "IsDebuggerPresent");
-
 	if (RTN_Valid(isdebuggerpresent))
 	{
 		fprintf(stderr, "[INFO] Replacing IsDebuggerPresent for anti IsDebuggerPresent\n");
 		fprintf(logfile, "[INFO] Replacing IsDebuggerPresent for anti IsDebuggerPresent\n");
-		RTN_Replace(isdebuggerpresent, AFUNPTR(MyOwnIsDebuggerPresent));
+		RTN_Replace(isdebuggerpresent, AFUNPTR(MyIsDebuggerPresent));
 	}
 
 	sleep = RTN_FindByName(img, "Sleep");
-
 	if (RTN_Valid(sleep))
 	{
 		fprintf(stderr, "[INFO] Replacing Sleep for anti Sleep\n");
@@ -36,7 +37,6 @@ void hook_functions(IMG img, VOID *v)
 	}
 
 	gettickcount = RTN_FindByName(img, "GetTickCount");
-
 	if (RTN_Valid(gettickcount))
 	{
 		fprintf(stderr, "[INFO] Replacing Sleep for anti GetTickCount\n");
@@ -68,7 +68,11 @@ void hook_instructions(INS ins, void *v)
 	}
 }
 
-WINDOWS::BOOL WINAPI MyOwnIsDebuggerPresent()
+/******************************
+*	HOOKS
+*******************************/
+
+WINDOWS::BOOL WINAPI MyIsDebuggerPresent()
 {
 	return FALSE;
 }
@@ -115,9 +119,8 @@ void MySleep(WINDOWS::DWORD dwMilliseconds)
 	return;
 }
 
-
 /*
-*	Fixed function following: https://reverseengineering.stackexchange.com/questions/17830/intel-pin-tracerpin-adding-modification-of-registers
+*	Fixed function thanks to: https://reverseengineering.stackexchange.com/questions/17830/intel-pin-tracerpin-adding-modification-of-registers
 */
 void MyRDTSC(ADDRINT *gax, ADDRINT *gdx)
 {
@@ -125,4 +128,6 @@ void MyRDTSC(ADDRINT *gax, ADDRINT *gdx)
 
 	*gax = new_value;
 	*gdx = (ADDRINT)0;
+
+	return;
 }
