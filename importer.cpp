@@ -309,6 +309,10 @@ bool Importer::compare_by_first_thunk(const import_directory_names_struct_t& a, 
 
 void Importer::clean_list()
 {
+	/*
+	*	First check if there's any dll without functions (because of stupid LoadLibrary
+	*	or some PIN's mistake).
+	*/
 	for (std::vector<import_directory_names_struct_t>::iterator it = dlls_and_functions.begin(); it != dlls_and_functions.end();)
 	{
 		if (it->name_or_ordinal.size() == 0)
@@ -322,6 +326,15 @@ void Importer::clean_list()
 		}
 	}
 
+	/*
+	*	I had to implement this because, all those functions imported
+	*	by packer that match with some functions from the packed code
+	*	receive the same destination address of copy, so what I do is
+	*	to search those first_thunk that correspond to the same imports
+	*	in case of match, I take the lowest.
+	*	TODO: check if the biggest first thunk of both is inside of the
+	*	other's range.
+	*/
 	for (int i = 0; i < dlls_and_functions.size(); i++)
 	{
 		for (size_t j = 0; j < dlls_and_functions.size(); j++)
@@ -329,20 +342,20 @@ void Importer::clean_list()
 			std::transform(dlls_and_functions.at(i).dll_name.begin(), dlls_and_functions.at(i).dll_name.end(), dlls_and_functions.at(i).dll_name.begin(), ::toupper);
 			std::transform(dlls_and_functions.at(j).dll_name.begin(), dlls_and_functions.at(j).dll_name.end(), dlls_and_functions.at(j).dll_name.begin(), ::toupper);
 			
-			fprintf(stderr, "Testing %s and %s with i = %d and j = %d\n", dlls_and_functions.at(i).dll_name.c_str(), dlls_and_functions.at(j).dll_name.c_str(), i, j);
+			fprintf(stderr, "[INFO] Testing %s and %s with i = %d and j = %d\n", dlls_and_functions.at(i).dll_name.c_str(), dlls_and_functions.at(j).dll_name.c_str(), i, j);
 			
 			if ((i != j) && (dlls_and_functions.at(i).dll_name == dlls_and_functions.at(j).dll_name))
 			{
 				if (dlls_and_functions.at(i).first_thunk < dlls_and_functions.at(j).first_thunk)
 				{
-					fprintf(stderr, "Deleting: %d\n", j);
+					fprintf(stderr, "[INFO] Deleting: %d\n", j);
 					dlls_and_functions.erase(dlls_and_functions.begin() + j);
 					i = -1;
 					break;
 				}
 				else
 				{
-					fprintf(stderr, "Deleting: %d\n", i);
+					fprintf(stderr, "[INFO] Deleting: %d\n", i);
 					dlls_and_functions.erase(dlls_and_functions.begin() + i);
 					i = -1;
 					break;
