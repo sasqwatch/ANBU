@@ -87,18 +87,8 @@ std::vector<uint8_t> Importer::ImporterDumpToFile(uint32_t& rva_of_import_direct
 	// if no dlls, return empty buffer
 	if (dlls_and_functions.empty())
 		return buffer;
-
-	for (std::vector<import_directory_names_struct_t>::iterator it = dlls_and_functions.begin(); it != dlls_and_functions.end();)
-	{
-		if (it->name_or_ordinal.size() == 0)
-		{
-			it = dlls_and_functions.erase(it);
-		}
-		else
-		{
-			++it;
-		}
-	}
+	
+	this->clean_list();
 
 	// order by first thunk
 	// so when we have to dump it
@@ -315,4 +305,49 @@ void Importer::copy_name_to_buffer(std::vector<uint8_t>& buffer, std::string nam
 bool Importer::compare_by_first_thunk(const import_directory_names_struct_t& a, const import_directory_names_struct_t& b)
 {
 	return a.first_thunk < b.first_thunk;
+}
+
+void Importer::clean_list()
+{
+	for (std::vector<import_directory_names_struct_t>::iterator it = dlls_and_functions.begin(); it != dlls_and_functions.end();)
+	{
+		if (it->name_or_ordinal.size() == 0)
+		{
+			it = dlls_and_functions.erase(it);
+		}
+		else
+		{
+
+			++it;
+		}
+	}
+
+	for (int i = 0; i < dlls_and_functions.size(); i++)
+	{
+		for (size_t j = 0; j < dlls_and_functions.size(); j++)
+		{
+			std::transform(dlls_and_functions.at(i).dll_name.begin(), dlls_and_functions.at(i).dll_name.end(), dlls_and_functions.at(i).dll_name.begin(), ::toupper);
+			std::transform(dlls_and_functions.at(j).dll_name.begin(), dlls_and_functions.at(j).dll_name.end(), dlls_and_functions.at(j).dll_name.begin(), ::toupper);
+			
+			fprintf(stderr, "Testing %s and %s with i = %d and j = %d\n", dlls_and_functions.at(i).dll_name.c_str(), dlls_and_functions.at(j).dll_name.c_str(), i, j);
+			
+			if ((i != j) && (dlls_and_functions.at(i).dll_name == dlls_and_functions.at(j).dll_name))
+			{
+				if (dlls_and_functions.at(i).first_thunk < dlls_and_functions.at(j).first_thunk)
+				{
+					fprintf(stderr, "Deleting: %d\n", j);
+					dlls_and_functions.erase(dlls_and_functions.begin() + j);
+					i = -1;
+					break;
+				}
+				else
+				{
+					fprintf(stderr, "Deleting: %d\n", i);
+					dlls_and_functions.erase(dlls_and_functions.begin() + i);
+					i = -1;
+					break;
+				}
+			}
+		}
+	}
 }

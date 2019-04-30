@@ -210,6 +210,11 @@ void hook_loadlibrary_after(ADDRINT dll_address)
 
 				fprintf(stderr, "[INFO] LoadLibraryA dll name: %s\n", saved_dll_nameA);
 				fprintf(logfile, "[INFO] LoadLibraryA dll name: %s\n", saved_dll_nameA);
+
+				aux->dll_address = dll_address;
+
+				fprintf(stderr, "[INFO] LoadLibrary returned: 0x%x\n", dll_address);
+				fprintf(logfile, "[INFO] LoadLibrary returned: 0x%x\n", dll_address);
 			}
 		}
 		else if (saved_dll_nameW != nullptr)
@@ -223,19 +228,15 @@ void hook_loadlibrary_after(ADDRINT dll_address)
 
 				fwprintf(stderr, L"[INFO] LoadLibraryW dll name: %S\n", saved_dll_nameW);
 				fwprintf(logfile, L"[INFO] LoadLibraryW dll name: %S\n", saved_dll_nameW);
+
+				aux->dll_address = dll_address;
+
+				fprintf(stderr, "[INFO] LoadLibrary returned: 0x%x\n", dll_address);
+				fprintf(logfile, "[INFO] LoadLibrary returned: 0x%x\n", dll_address);
 			}
 		}
-		
-		if (aux)
-		{
-			saved_dll_nameA = nullptr;
-			saved_dll_nameW = nullptr;
-
-			aux->dll_address = dll_address;
-
-			fprintf(stderr, "[INFO] LoadLibrary returned: 0x%x\n", dll_address);
-			fprintf(logfile, "[INFO] LoadLibrary returned: 0x%x\n", dll_address);
-		}
+		saved_dll_nameA = nullptr;
+		saved_dll_nameW = nullptr;
 	}
 }
 

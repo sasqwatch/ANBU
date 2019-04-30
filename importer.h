@@ -73,6 +73,7 @@ public:
 private:
 	void copy_name_to_buffer(std::vector<uint8_t>& buffer, std::string name);
 	bool compare_by_first_thunk(const import_directory_names_struct_t& a, const import_directory_names_struct_t& b);
+	void clean_list();
 
 	/****** HEADER DATA ******/
 	pe_parser::dos_header_t*						dos_header;

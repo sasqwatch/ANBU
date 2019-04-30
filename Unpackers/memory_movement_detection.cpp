@@ -160,8 +160,6 @@ void log_memwrite(UINT32 size)
 						dll_imports.at(i)->functions.at(j).function_name.c_str(),
 						dll_imports.at(i)->functions.at(j).function_address,
 						dll_imports.at(i)->functions.at(j).function_destination);
-					check_first_thunk = false;
-					return;
 				}
 			}
 		}
